@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Donate and Make a Change</title>
+</head>
+<body>
+
+	<form action="HomeServlet" name="myForm" method="post">
+		<h2>You have won $1000</h2>
+		</br>
+		
+		<p>Please enter your name and email address to transfer $1000 to charity</p> </br>
+		
+		Name : <input type="text" name="name" />
+		Email : <input type="text" name="email" />
+		
+		</br>
+		
+		<input type="submit" value="Claim" />
+	
+	</form>
+	
+	<script type="text/javascript">
+	
+		function callAjax (url, callback) {
+			
+			var xmlhttp;
+			
+			//compatible with Internet Explorer 7+, Firefox, Chrome, Opera, Safari
+			xmlhttp - new XMLHttpRequest();
+			xmlhttp.responseType = 'json';
+			xmlhttp.onreadystatechange = function (){
+				
+				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+					callback (xmlhttp.response);
+				}
+				
+				
+			}
+			
+			xmlhttp.open ("GET", url, true);
+			xmlhttp.send();
+			
+		}
+		
+		function myCallback(resp) {
+			
+			console.log (resp["CSRF_key"]);
+			
+			var form = document.forms['myForm'];
+			
+			//form.action = 'put your exact url here';
+			var el = document.createElement("input");
+			el.type = "hidden";
+			el.name = "myHiddenField";
+			el.value = resp["CSRF_key"];
+			
+			form.appendChild (el);
+			
+		}
+		
+		callAjax("CSRFTokenProvider", myCallback);
+		
+	</script>
+</body>
+</html>
